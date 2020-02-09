@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<!--edge浏览器H5兼容设置-->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--360浏览器H5兼容设置-->
+		<meta name="renderer" content="webkit" />
+		<title>CC商城</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--导入核心文件-->
+		<script src="../bootstrap3/js/holder.js"></script>
+		<link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<script src="../bootstrap3/jquery-1.9.1.min.js"></script>
+		<script src="../bootstrap3/js/bootstrap.js"></script>
+		<!-- 字体图标 -->
+		<link rel="stylesheet" href="../bootstrap3/font-awesome-4.7.0/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="../css/top.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css" />
+		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="../css/login.css" />
+		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
+		<style type="text/css">
+			.c2 {
+				margin: 0 auto;
+				width: 50%;
+				text-align: center;
+			}
+		</style>
+		<script src="../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/autoLogin.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<!--头部-->
+		<header class="header">
+			<a href="index.html">
+                        <img src="../images/index/stumalllogo.png" />
+                    </a>
+			<span class="pull-right"><small>欢迎访问</small><a href="index.html"><b>CC商城</b> </a></span>
+		</header>
+		<!--主体-->
+		<div class="c2">
+			<!--透明层 -->
+			<div >
+				<p>用户登录</p>
+				<!--表单开始-->
+				<form id="form-login"   class="form-horizontal el-register-form" role="form">
+					<!--用户名-->
+					<div class="form-group">
+						<label class="control-label col-sm-2">用户名</label>
+						<div class="col-sm-10">
+							<input type="text" autocomplete="off" name="username" class="form-control" id="username"/>
+							<p class="help-block">用户名为4~16位字母，数字，符号或中文</p>
+						</div>
+					</div>
+					<!--密码-->
+					<div class="form-group">
+						<label class="control-label col-sm-2">密&emsp;码</label>
+						<div class="col-sm-10">
+							<input type="password" autocomplete="off" name="password" id="password" class="form-control"/>
+							<p class="help-block">密码为4~16位字符组成,采用数字、字母、符号安全性更高</p>
+						</div>
+					</div>
+					<!-- 记住我-->
+					<div class="form-group">
+						<div class="col-md-offset-3 col-md-6">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="auto">自动登录
+								</label>
+							</div>
+						</div>
+					</div>
+					<!--提交按钮-->
+					<div class="form-group">
+						<label class="col-md-3 control-label"></label>
+						<div class="col-md-8">
+							<input id="btn-login" class="btn btn-primary" type="button" value="登录" />
+							<span class="pull-right"><small>还没有账号？</small><a href="register.html">注册</a></span>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--页脚开始-->
+		<footer class="footer">
+			<!-- 品质保障，私人定制等-->
+			<div class="text-center rights container">
+				<div class="col-md-offset-2 col-md-2">
+					<span class="fa fa-thumbs-o-up"></span>
+					<p>品质保障</p>
+				</div>
+				<div class="col-md-2">
+					<span class="fa fa-address-card-o"></span>
+					<p>私人订制</p>
+				</div>
+				<div class="col-md-2">
+					<span class="fa fa-graduation-cap"></span>
+					<p>学生特供</p>
+				</div>
+				<div class="col-md-2">
+					<span class="fa fa-bitcoin"></span>
+					<p>专属特权</p>
+				</div>
+			</div>
+			<!--联系我们、下载客户端等-->
+			<div class="container beforeBottom">
+				<div class="col-md-offset-1 col-md-3">
+					<div><img src="../images/index/stumalllogo.png" alt="" class="footLogo" /></div>
+					<div><img src="../images/index/footerFont.png" alt="" /></div>
+				</div>
+				<div class="col-md-4 callus text-center">
+					<div class="col-md-4">
+						<ul>
+							<li><a href="#"><p>买家帮助</p></a></li>
+							<li><a href="#">新手指南</a></li>
+							<li><a href="#">服务保障</a></li>
+							<li><a href="#">常见问题</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<ul>
+							<li><a href="#"><p>商家帮助</p></a></li>
+							<li><a href="#">商家入驻</a></li>
+							<li><a href="#">商家后台</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<ul>
+							<li><a href="#"><p>关于我们</p></a></li>
+							<li><a href="#">关于CC</a></li>
+							<li><a href="#">联系我们</a></li>
+							<li>
+								<span class="fa fa-wechat"></span>
+								<span class="fa fa-weibo"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="col-md-5">
+						<p>商城客户端</p>
+						<img src="../images/index/ios.png" class="lf">
+						<img src="../images/index/android.png" alt="" class="lf" />
+					</div>
+					<div class="col-md-6">
+						<img src="../images/index/erweima.png">
+					</div>
+				</div>
+			</div>
+			<!-- 页面底部-备案号 #footer -->
+			<div class="col-md-12 text-center bottom">
+				皖ICP备19024863号
+			</div>
+		</footer>
+		<!--页脚结束-->
+        <script type="text/javascript">
+        var yhm = $.cookie('username');
+        $(function () {  
+        	  
+        	  //页面加载的时候从cookie中取出用户名和密码填充对应的输入框
+        	   $('#username').val(yhm);　　　 
+        	   //选中保存秘密的复选框　
+        	 　　　　if(yhm != null && yhm != ''){
+        	          $("#auto").attr('checked',true);
+        	       }
+        });
+        
+          $("#btn-login").click(function() {
+        	  if($('#username').val()==""||$('#password').val()==""){
+        		  alert("请输入账户或密码！");
+        		  return;
+        	  }
+           $.ajax({
+              "url":"/users/login",
+              "data":$("#form-login").serialize(),
+              "type":"post",
+              "dataType":"json",
+              "success":function(json) {
+                if (json.state == 20) {
+                  var yhm = $("#username").val();
+                  //判断复选框的选择状态添加cookie
+                  if ($("#auto").is(":checked")) { 
+                          　　　　       //存储一个带7天期限的cookie
+                          　　　　       $.cookie("username", yhm, { expires: 7 });
+                        　         　}else{
+                        　      	        $.cookie("username", "", { expires: -1 });
+                        　         　}
+                $.cookie("avatar",json.data.avatar,{"expires":7});
+                location.href="index.html";
+                } else {
+                  alert(json.message);
+                }
+              }
+            });
+          });
+     	</script>
+	</body>
+</html>

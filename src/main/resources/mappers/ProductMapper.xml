@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace：当前XML文件用于配置哪个接口中抽象方法对应的SQL语句 -->
+<mapper namespace="com.ccstay.ccstore.mapper.ProductMapper">
+
+	<resultMap type="com.ccstay.ccstore.entity.Product" id="product">
+		<id column="id" property="id" />
+		<result column="category_id" property="categoryId" />
+		<result column="item_type" property="itemType" />
+		<result column="title" property="title" />
+		<result column="sell_point" property="sellPoint" />
+		<result column="price" property="price" />
+		<result column="num" property="num" />
+		<result column="image" property="image" />
+		<result column="status" property="status" />
+		<result column="priority" property="priority" />
+		<result column="created_user" property="createdUser" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_time" property="modifiedTime" />
+		<result column="modified_user" property="modifiedUser" />
+	</resultMap>
+
+	<select id="findHotList" resultMap="product">
+		SELECT
+		  id,title,
+          price,image
+		FROM
+		  t_product
+		WHERE
+		  status=1 and num>0
+		ORDER BY
+		  priority DESC 
+		LIMIT 0,4
+	</select>
+	
+	<select id="findNewList" resultMap="product">
+		SELECT
+		  id,title,
+          price,image
+		FROM
+		  t_product
+		WHERE
+		  status=1 and num>0
+		ORDER BY
+		  modified_time DESC 
+		LIMIT 0,4
+	</select>
+	
+	<select id="findById" resultMap="product">
+		SELECT
+		  *
+		FROM
+		  t_product
+		WHERE
+		  id=#{id}
+	</select>
+	
+	<update id="updateNum">
+	   UPDATE
+	       t_product
+	   SET
+	       num=#{num}
+	   WHERE
+	       id=#{id}
+	</update>
+</mapper>
+
+   
+
+
+
+

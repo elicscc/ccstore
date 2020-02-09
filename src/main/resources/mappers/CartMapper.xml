@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace：当前XML文件用于配置哪个接口中抽象方法对应的SQL语句 -->
+<mapper namespace="com.ccstay.ccstore.mapper.CartMapper">
+
+	<resultMap type="com.ccstay.ccstore.entity.Cart" id="cart">
+		<id column="cid" property="cid" />
+		<result column="uid" property="uid" />
+		<result column="pid" property="pid" />
+		<result column="price" property="price" />
+		<result column="num" property="num" />
+		<result column="created_user" property="createdUser" />
+		<result column="created_time" property="createdTime" />
+		<result column="modified_user" property="modifiedUser" />
+		<result column="modified_time" property="modifiedTime" />
+	</resultMap>
+
+	<insert id="saveCart" keyProperty="cid" useGeneratedKeys="true">
+		INSERT INTO t_cart(
+			uid,pid,
+			price,num,
+			created_user,created_time,
+			modified_user,modified_time
+		)VALUES(
+			#{uid}, #{pid},
+			#{price}, #{num},
+			#{ createdUser}, #{createdTime},
+			#{ modifiedUser}, #{modifiedTime}
+		)
+	</insert>
+    <select id="getByUidAndPid" resultMap="cart">
+		SELECT 
+		  *
+		FROM
+		  t_cart
+		WHERE
+		  uid=#{uid} AND pid=#{pid}  
+    </select>
+    <select id="findByCid" resultMap="cart">
+		SELECT 
+		  *
+		FROM
+		  t_cart
+		WHERE
+		  cid=#{cid}   
+    </select>
+    <select id="findCartList" resultType="com.ccstay.ccstore.entity.CartVO">
+		SELECT 
+		  t1.cid,t1.pid,
+		  t2.image,t2.title,
+		  t2.price as realPrice,t1.price,
+		  t1.num
+		FROM
+		  t_cart t1 left join t_product t2
+		ON
+		  t1.pid=t2.id  
+		WHERE
+		   t1.uid=#{uid}
+		
+    </select>
+    <select id="findByCids" resultType="com.ccstay.ccstore.entity.CartVO">
+		SELECT 
+		  t1.cid,t1.pid,
+		  t2.image,t2.title,
+		  t2.price as realPrice,t1.price,
+		  t1.num,t1.uid
+		FROM
+		  t_cart t1 left join t_product t2
+		ON
+		  t1.pid=t2.id  
+		WHERE
+		   cid IN
+		   <foreach collection="array"
+		   item="cid" open="(" close=")" separator=",">
+		      #{cid}
+		   </foreach>
+	   ORDER BY
+	        t1.modified_time desc;
+    </select>
+    <delete id="deleteByCid">
+        DELETE FROM
+            t_cart
+        WHERE
+            cid=#{cid}
+    </delete>
+	<update id="updateNum">
+	   UPDATE 
+	      t_cart
+	   SET
+	      num=#{num},
+	      modified_user=#{modifiedUser}, 
+	      modified_time= #{modifiedTime}
+	    WHERE
+	     cid=#{cid}
+	</update>
+	<delete id="deleteByCids" >
+	   DELETE  FROM
+	     t_cart
+	   WHERE
+	     cid
+	   IN 
+	   <foreach collection="array"
+	   separator="," open="(" close=")" item="cid"
+	   >
+	       #{cid}
+	   </foreach>
+	</delete>
+</mapper>
+
+   
+
+
+
+
