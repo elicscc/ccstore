@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: baidu
 ---
 server:
   port: 8080
