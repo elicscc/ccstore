@@ -361,8 +361,8 @@
                  if (json.state == 20) {
                     var data=json.data;
                     for(var i=1;i<=5;i++){
-                        $("#img-big-"+i).attr("src",data.image+""+i+"_big.png");
-                        $("#img-"+i).attr("src",data.image+""+i+".jpg");
+                        $("#img-big-"+i).attr("src","https://cdn.jsdelivr.net/gh/elicscc/ccstore/src/main/resources/static"+data.image+""+i+"_big.png");
+                        $("#img-"+i).attr("src","https://cdn.jsdelivr.net/gh/elicscc/ccstore/src/main/resources/static"+data.image+""+i+".jpg");
                     }
                     $("#product-title").text(data.title);
                     $("#sell_point").text(data.sellPoint);
