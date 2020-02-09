@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    active: baidu
+---
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  profiles: baidu
+  jackson:
+    default-property-inclusion: NON_NULL
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///tedu_store?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username:
+    password:
+mybatis:
+  mapper-locations: classpath:/mappers/*.xml
+  type-aliases-package: com.ccstay.ccstore.mapper
+  configuration:
+    map-underscore-to-camel-case: true
+thymelef:
+  prefix: classpath:/templates/pages/
+  suffix: .html
+aop:
+  proxy-target-class: false
+---
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  profiles: test
+  jackson:
+    default-property-inclusion: NON_NULL
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///tedu_store?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+mybatis:
+  mapper-locations: classpath:/mappers/*.xml
+  type-aliases-package: com.ccstay.ccstore.mapper
+  configuration:
+    map-underscore-to-camel-case: true
+thymelef:
+  prefix: classpath:/templates/pages/
+  suffix: .html
+aop:
+  proxy-target-class: false
+
+
