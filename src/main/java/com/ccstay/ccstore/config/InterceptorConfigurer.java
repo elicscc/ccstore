@@ -57,6 +57,7 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
         patterns.add("/js/**");
         patterns.add("/web/login.html");
         patterns.add("/web/antv.html");
+        patterns.add("/web/rq.html");
         patterns.add("/robots.txt");
         patterns.add("/web/register.html");
         patterns.add("/web/index.html");

@@ -1,4 +1,5 @@
-/*!
+/*
+/!*!
 
 Holder - 2.3.2 - client side image placeholders
 (c) 2012-2014 Ivan Malopinsky / http://imsky.co
@@ -6,7 +7,7 @@ Holder - 2.3.2 - client side image placeholders
 Provided under the MIT License.
 Commercial use requires attribution.
 
-*/
+*!/
 var Holder = Holder || {};
 (function (app, win) {
 var system_config = {
@@ -634,7 +635,7 @@ if (typeof define === "function" && define.amd) {
 (function(){function t(t){this.message=t}var e="undefined"!=typeof exports?exports:this,r="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";t.prototype=Error(),t.prototype.name="InvalidCharacterError",e.btoa||(e.btoa=function(e){for(var o,n,a=0,i=r,c="";e.charAt(0|a)||(i="=",a%1);c+=i.charAt(63&o>>8-8*(a%1))){if(n=e.charCodeAt(a+=0.75),n>255)throw new t("'btoa' failed");o=o<<8|n}return c}),e.atob||(e.atob=function(e){if(e=e.replace(/=+$/,""),1==e.length%4)throw new t("'atob' failed");for(var o,n,a=0,i=0,c="";n=e.charAt(i++);~n&&(o=a%4?64*o+n:n,a++%4)?c+=String.fromCharCode(255&o>>(6&-2*a)):0)n=r.indexOf(n);return c})})();
 
 //getElementsByClassName polyfill
-document.getElementsByClassName||(document.getElementsByClassName=function(e){var t=document,n,r,i,s=[];if(t.querySelectorAll)return t.querySelectorAll("."+e);if(t.evaluate){r=".//*[contains(concat(' ', @class, ' '), ' "+e+" ')]",n=t.evaluate(r,t,null,0,null);while(i=n.iterateNext())s.push(i)}else{n=t.getElementsByTagName("*"),r=new RegExp("(^|\\s)"+e+"(\\s|$)");for(i=0;i<n.length;i++)r.test(n[i].className)&&s.push(n[i])}return s})
+document.getElementsByClassName||(document.getElementsByClassName=function(e){var t=document,n,r,i,s=[];if(t.querySelectorAll)return t.querySelectorAll("."+e);if(t.evaluate){r=".//!*[contains(concat(' ', @class, ' '), ' "+e+" ')]",n=t.evaluate(r,t,null,0,null);while(i=n.iterateNext())s.push(i)}else{n=t.getElementsByTagName("*"),r=new RegExp("(^|\\s)"+e+"(\\s|$)");for(i=0;i<n.length;i++)r.test(n[i].className)&&s.push(n[i])}return s})
 
 //getComputedStyle polyfill
 window.getComputedStyle||(window.getComputedStyle=function(e){return this.el=e,this.getPropertyValue=function(t){var n=/(\-([a-z]){1})/g;return t=="float"&&(t="styleFloat"),n.test(t)&&(t=t.replace(n,function(){return arguments[2].toUpperCase()})),e.currentStyle[t]?e.currentStyle[t]:null},this})
@@ -663,12 +664,12 @@ function extend(a,b){
 
 //hasOwnProperty polyfill
 if (!Object.prototype.hasOwnProperty)
-    /*jshint -W001, -W103 */
+    /!*jshint -W001, -W103 *!/
     Object.prototype.hasOwnProperty = function(prop) {
 		var proto = this.__proto__ || this.constructor.prototype;
 		return (prop in this) && (!(prop in proto) || proto[prop] !== this[prop]);
 	}
-    /*jshint +W001, +W103 */
+    /!*jshint +W001, +W103 *!/
 		
 //Object.keys polyfill - http://stackoverflow.com/questions/18912932/object-keys-not-working-in-internet-explorer
 if (!Object.keys) {
@@ -683,4 +684,4 @@ if (!Object.keys) {
   };
 }
 
-})(Holder, window);
+})(Holder, window);*/

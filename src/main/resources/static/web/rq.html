@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">	<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <title>数据可视化demo</title>
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g2/3.4.10/dist/g2.min.js"></script>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.10.2/dist/data-set.min.js"></script>
+    <! --引入最新版的L7-->
+    <script  src="../js/l7.js"></script>
+    <script src="../bootstrap3/jquery-1.9.1.min.js"></script>
+    <!--  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.l7-2.0.8/dist/l7.js"></script>-->
+    <style>
+        .g2-guide-html {
+            width: 100px;
+            height: 80px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 0.4
+        }
+
+        .g2-guide-html .title {
+            font-size: 12px;
+            color: #8c8c8c;
+            font-weight: 300;
+        }
+
+        .g2-guide-html .value {
+            font-size: 30px;
+            color: #000;
+            font-weight: bold;
+        }
+
+
+       #container, .c ,#map{
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+
+            justify-content: start;
+            flex-wrap: wrap;
+        }
+
+    </style>
+</head>
+<body>
+<div class="c">
+    <div id="c1"></div>
+    <div id="c2"></div>
+</div>
+<div id="container"></div>
+<div id="map" style="flex:none;position:relative;outline:none;width:77%" ></div>
+
+<script>
+
+
+    const startAngle = -Math.PI / 2 - Math.PI / 4;
+    const data = [
+        {type: '书法', value: 7140},
+        {type: '美术', value: 3875},
+        {type: '乐器', value: 2267},
+        {type: '机器人', value: 1853},
+        {type: '医疗', value: 1685},
+        {type: '主持', value: 1179},
+        {type: '舞蹈', value: 1088},
+        {type: '其他', value: 583}
+    ];
+    const ds = new DataSet();
+    const dv = ds.createView().source(data);
+    dv.transform({
+        type: 'percent',
+        field: 'value',
+        dimension: 'type',
+        as: 'percent'
+    });
+    const chart = new G2.Chart({
+        container: 'container',
+        forceFit: true,
+        height: 500,
+        padding: 'auto'
+    });
+    chart.source(dv);
+    chart.legend(false);
+    chart.coord('theta', {
+        radius: 0.75,
+        innerRadius: 0.5,
+        startAngle,
+        endAngle: startAngle + Math.PI * 2
+    });
+    chart.intervalStack().position('value')
+        .color('type', ['#0a4291', '#0a57b6', '#1373db', '#2295ff', '#48adff', '#6fc3ff', '#96d7ff', '#bde8ff'])
+        .opacity(1)
+        .label('percent', {
+            offset: -20,
+            textStyle: {
+                fill: 'white',
+                fontSize: 12,
+                shadowBlur: 2,
+                shadowColor: 'rgba(0, 0, 0, .45)'
+            },
+            formatter: val => {
+                return parseInt(val * 100) + '%';
+            }
+        });
+    chart.guide().html({
+        position: ['50%', '50%'],
+        html: '<div class="g2-guide-html"><p class="title">总计</p><p class="value">19670</p></div>'
+    });
+    chart.render();
+    // draw label
+    const OFFSET = 20;
+    const APPEND_OFFSET = 50;
+    const LINEHEIGHT = 60;
+    const coord = chart.get('coord'); // 获取坐标系对象
+    const center = coord.center; // 极坐标圆心坐标
+    const r = coord.radius; // 极坐标半径
+    const canvas = chart.get('canvas');
+    const canvasWidth = chart.get('width');
+    const canvasHeight = chart.get('height');
+    const labelGroup = canvas.addGroup();
+    const labels = [];
+    addPieLabel(chart);
+    canvas.draw();
+    chart.on('afterpaint', function () {
+        addPieLabel(chart);
+    });
+
+    // main
+    function addPieLabel() {
+        const halves = [[], []];
+        const data = dv.rows;
+        let angle = startAngle;
+
+        for (let i = 0; i < data.length; i++) {
+            const percent = data[i].percent;
+            const targetAngle = angle + (Math.PI * 2 * percent);
+            const middleAngle = angle + (targetAngle - angle) / 2;
+            angle = targetAngle;
+            const edgePoint = getEndPoint(center, middleAngle, r);
+            const routerPoint = getEndPoint(center, middleAngle, r + OFFSET);
+            // label
+            const label = {
+                _anchor: edgePoint,
+                _router: routerPoint,
+                _data: data[i],
+                x: routerPoint.x,
+                y: routerPoint.y,
+                r: r + OFFSET,
+                fill: '#bfbfbf'
+            };
+            // 判断文本的方向
+            if (edgePoint.x < center.x) {
+                label._side = 'left';
+                halves[0].push(label);
+            } else {
+                label._side = 'right';
+                halves[1].push(label);
+            }
+        }// end of for
+
+        const maxCountForOneSide = parseInt(canvasHeight / LINEHEIGHT, 10);
+        halves.forEach(function (half, index) {
+            // step 2: reduce labels
+            if (half.length > maxCountForOneSide) {
+                half.sort(function (a, b) {
+                    return b._percent - a._percent;
+                });
+                half.splice(maxCountForOneSide, half.length - maxCountForOneSide);
+            }
+
+            // step 3: distribute position (x and y)
+            half.sort(function (a, b) {
+                return a.y - b.y;
+            });
+            antiCollision(half, index);
+        });
+    }
+
+    function getEndPoint(center, angle, r) {
+        return {
+            x: center.x + r * Math.cos(angle),
+            y: center.y + r * Math.sin(angle)
+        };
+    }
+
+    function drawLabel(label) {
+        const _anchor = label._anchor,
+            _router = label._router,
+            fill = label.fill,
+            y = label.y;
+
+        const labelAttrs = {
+            y,
+            fontSize: 12, // 字体大小
+            fill: '#808080',
+            text: label._data.type + '\n' + label._data.value,
+            textBaseline: 'bottom'
+        };
+        const lastPoint = {
+            y
+        };
+
+        if (label._side === 'left') {
+            // 具体文本的位置
+            lastPoint.x = APPEND_OFFSET;
+            labelAttrs.x = APPEND_OFFSET; // 左侧文本左对齐并贴着画布最左侧边缘
+            labelAttrs.textAlign = 'left';
+        } else {
+            lastPoint.x = canvasWidth - APPEND_OFFSET;
+            labelAttrs.x = canvasWidth - APPEND_OFFSET; // 右侧文本右对齐并贴着画布最右侧边缘
+            labelAttrs.textAlign = 'right';
+        }
+
+        // 绘制文本
+        const text = labelGroup.addShape('Text', {
+            attrs: labelAttrs
+        });
+        labels.push(text);
+        // 绘制连接线
+        let points = void 0;
+        if (_router.y !== y) {
+            // 文本位置做过调整
+            points = [[_anchor.x, _anchor.y], [
+                _router.x, y
+            ], [lastPoint.x, lastPoint.y]];
+        } else {
+            points = [[_anchor.x, _anchor.y], [_router.x, _router.y], [lastPoint.x, lastPoint.y]];
+        }
+
+        labelGroup.addShape('polyline', {
+            attrs: {
+                points,
+                lineWidth: 1,
+                stroke: fill
+            }
+        });
+    }
+
+    function antiCollision(half, isRight) {
+        const startY = center.y - r - OFFSET - LINEHEIGHT;
+        let overlapping = true;
+        let totalH = canvasHeight;
+        let i = void 0;
+
+        let maxY = 0;
+        let minY = Number.MIN_VALUE;
+        const boxes = half.map(function (label) {
+            const labelY = label.y;
+            if (labelY > maxY) {
+                maxY = labelY;
+            }
+            if (labelY < minY) {
+                minY = labelY;
+            }
+            return {
+                size: LINEHEIGHT,
+                targets: [labelY - startY]
+            };
+        });
+        if (maxY - startY > totalH) {
+            totalH = maxY - startY;
+        }
+
+        while (overlapping) {
+            // eslint-disable-next-line no-loop-func
+            boxes.forEach(box => {
+                const target = (Math.min.apply(minY, box.targets) + Math.max.apply(minY, box.targets)) / 2;
+                box.pos = Math.min(Math.max(minY, target - box.size / 2), totalH - box.size);
+            });
+
+            // detect overlapping and join boxes
+            overlapping = false;
+            i = boxes.length;
+            while (i--) {
+                if (i > 0) {
+                    const previousBox = boxes[i - 1];
+                    const box = boxes[i];
+                    if (previousBox.pos + previousBox.size > box.pos) {
+                        // overlapping
+                        previousBox.size += box.size;
+                        previousBox.targets = previousBox.targets.concat(box.targets);
+
+                        // overflow, shift up
+                        if (previousBox.pos + previousBox.size > totalH) {
+                            previousBox.pos = totalH - previousBox.size;
+                        }
+                        boxes.splice(i, 1); // removing box
+                        overlapping = true;
+                    }
+                }
+            }
+        }
+
+        // step 4: normalize y and adjust x
+        i = 0;
+        boxes.forEach(function (b) {
+            let posInCompositeBox = startY; // middle of the label
+            b.targets.forEach(function () {
+                half[i].y = b.pos + posInCompositeBox + LINEHEIGHT / 2;
+                posInCompositeBox += LINEHEIGHT;
+                i++;
+            });
+        });
+
+        // (x - cx)^2 + (y - cy)^2 = totalR^2
+        half.forEach(function (label) {
+            const rPow2 = label.r * label.r;
+            const dyPow2 = Math.pow(Math.abs(label.y - center.y), 2);
+            if (rPow2 < dyPow2) {
+                label.x = center.x;
+            } else {
+                const dx = Math.sqrt(rPow2 - dyPow2);
+                if (!isRight) {
+                    // left
+                    label.x = center.x - dx;
+                } else {
+                    // right
+                    label.x = center.x + dx;
+                }
+            }
+            drawLabel(label);
+        });
+    }
+
+
+    const data2 = [
+        {genre: '芜湖市', sold: 275},
+        {genre: '繁昌', sold: 115},
+        {genre: '南陵', sold: 120},
+        {genre: '无为', sold: 350},
+        {genre: 'Other', sold: 150},
+    ]; // G2 对数据源格式的要求，仅仅是 JSON 数组，数组的每个元素是一个标准 JSON 对象。
+    // Step 1: 创建 Chart 对象
+    const chart3 = new G2.Chart({
+        container: 'c1', // 指定图表容器 ID
+        width: 600, // 指定图表宽度
+        height: 300, // 指定图表高度
+    });
+    const chart2 = new G2.Chart({
+        container: 'c2', // 指定图表容器 ID
+        width: 600, // 指定图表宽度
+        height: 300, // 指定图表高度
+    });
+    // Step 2: 载入数据源
+    chart3.source(data2);
+    chart2.source(data2);
+    // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+    chart3
+        .interval()
+        .position('genre*sold')
+        .color('genre');
+    chart2
+        .interval()
+        .position('genre*sold')
+        .color('genre');
+    // Step 4: 渲染图表
+    chart3.render();
+    chart2.render();
+    // chart3.render();
+</script>
+
+<script>
+
+    const scene = new L7.Scene({
+        id: 'map',
+        map: new L7.GaodeMap({
+            style: 'dark', // 样式URL
+            center: [118.384108423, 31.3660197875],
+            pitch: 0,
+            zoom: 12,
+            token: '高德地图token',
+        }),
+    });
+
+    fetch('https://gw.alipayobjects.com/os/rmsportal/oVTMqfzuuRFKiDwhPSFL.json')
+        .then(res => res.json())
+        .then(data => {
+            const pointLayer = new L7.PointLayer({})
+                .source(data.list, {
+                    parser: {
+                        type: 'json',
+                        x: 'j',
+                        y: 'w'
+                    }
+                })
+                .shape('cylinder')
+                .size('t', function (level) {
+                    return [1, 2, level * 2 + 20];
+                })
+                .color('t', [
+                    '#094D4A',
+                    '#146968',
+                    '#1D7F7E',
+                    '#289899',
+                    '#34B6B7',
+                    '#4AC5AF',
+                    '#5FD3A6',
+                    '#7BE39E',
+                    '#A1EDB8',
+                    '#CEF8D6'
+                ])
+                .style({
+                    opacity: 1.0
+                });
+            scene.addLayer(pointLayer);
+        });
+   $("#map").css('width',400);
+   $("#map").css('height',400);
+
+</script>
+
+
+</body>
+</html>
