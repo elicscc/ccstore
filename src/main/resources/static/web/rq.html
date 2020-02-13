@@ -1,14 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">	<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <meta charset="UTF-8"> <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <title>数据可视化demo</title>
     <script src="https://gw.alipayobjects.com/os/lib/antv/g2/3.4.10/dist/g2.min.js"></script>
     <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.10.2/dist/data-set.min.js"></script>
-    <! --引入最新版的L7-->
-    <script  src="../js/l7.js"></script>
+
+    <script src="../js/l7.js"></script>
     <script src="../bootstrap3/jquery-1.9.1.min.js"></script>
-    <!--  <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.l7-2.0.8/dist/l7.js"></script>-->
+
     <style>
         .g2-guide-html {
             width: 100px;
@@ -31,7 +32,7 @@
         }
 
 
-       #container, .c ,#map{
+        #container, .c ,#map{
             margin: 10px;
             display: flex;
             flex-direction: column;
@@ -43,12 +44,12 @@
     </style>
 </head>
 <body>
-<div class="c">
+<div id="map" style=" min-height: 500px; justify-content: center;position: relative"></div>
+<div class="c" >
     <div id="c1"></div>
     <div id="c2"></div>
 </div>
-<div id="container"></div>
-<div id="map" style="flex:none;position:relative;outline:none;width:77%" ></div>
+<div id="container" style="position:relative"></div>
 
 <script>
 
@@ -357,8 +358,8 @@
     chart2.render();
     // chart3.render();
 </script>
-
-<script>
+<!--地图-->
+<!--<script>
 
     const scene = new L7.Scene({
         id: 'map',
@@ -403,11 +404,44 @@
                 });
             scene.addLayer(pointLayer);
         });
-   $("#map").css('width',400);
-   $("#map").css('height',400);
+    $("#map").css('width',400);
+    $("#map").css('height',400);
+
+</script>-->
+<script>
+    //import { Scene, PointLayer } from '@antv/l7';
+    //import { GaodeMap } from '@antv/l7-maps';
+
+    const scene = new L7.Scene({
+        id: 'map',
+        map: new L7.GaodeMap({
+            style: 'dark',
+            center: [118.384108423, 31.3660197875],
+            pitch: 0,
+            zoom: 11
+        })
+    });
+
+    fetch('https://gw.alipayobjects.com/os/rmsportal/BElVQFEFvpAKzddxFZxJ.txt')
+        .then(res => res.text())
+        .then(data => {
+            const pointLayer = new L7.PointLayer({})
+                .source(data, {
+                    parser: {
+                        type: 'csv',
+                        y: 'lat',
+                        x: 'lng'
+                    }
+                })
+                .size(0.5)
+                .color('#080298')
+                .style({
+                    opacity: 1
+                });
+
+            scene.addLayer(pointLayer);
+        });
 
 </script>
-
-
 </body>
 </html>
