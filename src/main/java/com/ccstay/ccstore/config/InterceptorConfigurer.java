@@ -47,21 +47,20 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         HandlerInterceptor loginInterceptor = new LoginInterceptor();
         InterceptorRegistration ir = registry.addInterceptor(loginInterceptor);
-        // 黑名单
-        ir.addPathPatterns("/**");
 
         List<String> patterns = new ArrayList<>();
         patterns.add("/bootstrap3/**");
         patterns.add("/css/**");
         patterns.add("/images/**");
         patterns.add("/js/**");
-        patterns.add("/web/login.html");
-        patterns.add("/web/antv.html");
-        patterns.add("/web/rq.html");
+        patterns.add("/login.html");
+        patterns.add("/antv.html");
+        patterns.add("/");
+        patterns.add("/rq.html");
         patterns.add("/robots.txt");
-        patterns.add("/web/register.html");
-        patterns.add("/web/index.html");
-        patterns.add("/web/product.html");
+        patterns.add("/register.html");
+        patterns.add("/index.html");
+        patterns.add("/product.html");
         // 注册和登录控制器
         patterns.add("/users/login");
         patterns.add("/users/reg");
@@ -72,6 +71,8 @@ public class InterceptorConfigurer implements WebMvcConfigurer {
         patterns.add("/products/**");
         // 白名单
         ir.excludePathPatterns(patterns);
+        // 黑名单
+        ir.addPathPatterns("/**");
     }
 
 }

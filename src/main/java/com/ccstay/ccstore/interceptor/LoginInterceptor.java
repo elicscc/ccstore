@@ -14,7 +14,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         if (session.getAttribute("uid") == null) {
             // 重定向到登录页面
-            response.sendRedirect("/web/login.html");
+            response.sendRedirect("/login.html");
             return false;
         }
         // 放行

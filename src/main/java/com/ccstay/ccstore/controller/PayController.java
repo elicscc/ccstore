@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("web/pay")
+@RequestMapping("/pay")
 public class PayController extends BaseController {
     @Autowired
     IPayService service;
@@ -23,7 +23,7 @@ public class PayController extends BaseController {
 //        return new JsonResult<String>(SUCCESS, re);
 //    }
 
-    @RequestMapping("money")
+    @RequestMapping("/money")
     public void pay(Integer id, HttpServletResponse response) throws IOException {
         String re = service.pay(id);
         response.setContentType("text/html;charset=utf-8");

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController extends BaseController {
 
     private static final long AVATAR_MAX_SIZE = 1 * 1024 * 1024;
@@ -42,7 +42,7 @@ public class UserController extends BaseController {
         return new JsonResult<>(SUCCESS);
     }
 
-    @RequestMapping("change_password")
+    @RequestMapping("/change_password")
     public JsonResult<Void> changePassword(@RequestParam("old_password") String oldPassword,
             @RequestParam("new_password") String newPassword, HttpSession session) {
 
@@ -56,7 +56,7 @@ public class UserController extends BaseController {
         return new JsonResult<Void>(SUCCESS);
     }
 
-    @PostMapping("change_info")
+    @PostMapping("/change_info")
     public JsonResult<Void> changeInfo(User user, HttpSession session) {
         // 从session中获取uid
         Integer uid = Integer.valueOf(session.getAttribute(SESSION_UID).toString());
@@ -70,7 +70,7 @@ public class UserController extends BaseController {
         return new JsonResult<>(SUCCESS);
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public JsonResult<User> login(String username, String password, HttpSession session) {
 
         // 调用service的login()进行登录
@@ -85,7 +85,7 @@ public class UserController extends BaseController {
         return new JsonResult<User>(SUCCESS, user);
     }
 
-    @GetMapping("get_by_uid")
+    @GetMapping("/get_by_uid")
     public JsonResult<User> getByUid(HttpSession session) {
         // 从session中获取uid
         Integer uid = Integer.valueOf(session.getAttribute(SESSION_UID).toString());
@@ -95,7 +95,7 @@ public class UserController extends BaseController {
         return new JsonResult<User>(SUCCESS, user);
     }
 
-    @PostMapping("change_avatar")
+    @PostMapping("/change_avatar")
     public JsonResult<String> changeAvatar(@RequestParam("file") MultipartFile file,
             HttpServletRequest request) {
         

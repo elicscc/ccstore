@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("carts")
+@RequestMapping("/carts")
 public class CartController extends BaseController {
     @Autowired
     ICartService service;
 
-    @PostMapping("create_cart")
+    @PostMapping("/create_cart")
     public JsonResult<Void> createCart(Integer num, Integer pid, HttpSession session) {
         Integer uid = getUidFromSession(session);
         String username = getUsernameFromSession(session);
@@ -30,7 +30,7 @@ public class CartController extends BaseController {
         return new JsonResult<Void>(SUCCESS);
     }
 
-    @PostMapping("{cid}/del")
+    @PostMapping("/{cid}/del")
     public JsonResult<Void> removeCart(@PathVariable("cid") Integer cid, HttpSession session) {
         Integer uid = getUidFromSession(session);
         service.removeCart(cid, uid);
@@ -43,7 +43,7 @@ public class CartController extends BaseController {
         return new JsonResult<List<CartVO>>(SUCCESS, service.getCartList(uid));
     }
 
-    @RequestMapping("add_num")
+    @RequestMapping("/add_num")
     public JsonResult<List<CartVO>> addNum(HttpSession session, Integer num, Integer cid) {
         Integer uid = getUidFromSession(session);
         String username = getUsernameFromSession(session);
@@ -51,7 +51,7 @@ public class CartController extends BaseController {
         return new JsonResult<List<CartVO>>(SUCCESS);
     }
 
-    @GetMapping("get_by_cids")
+    @GetMapping("/get_by_cids")
     public JsonResult<List<CartVO>> getByCids(HttpSession session, Integer[] cids) {
         Integer uid = getUidFromSession(session);
         List<CartVO> data = service.getByCids(cids, uid);

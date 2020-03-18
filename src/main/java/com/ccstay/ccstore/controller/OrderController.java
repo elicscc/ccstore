@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("orders")
+@RequestMapping("/orders")
 public class OrderController extends BaseController {
     @Autowired
     IOrderService service;
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public JsonResult<Void> createOrder(Integer aid, Integer[] cids, HttpSession session) {
         Integer uid = getUidFromSession(session);
         String username = getUsernameFromSession(session);
@@ -28,7 +28,7 @@ public class OrderController extends BaseController {
         return new JsonResult<>(SUCCESS);
     }
 
-    @GetMapping("id")
+    @GetMapping("/id")
     public JsonResult<Order> carts(HttpSession session) {
         Integer uid = getUidFromSession(session);
         return new JsonResult<Order>(SUCCESS, service.getByUid(uid));

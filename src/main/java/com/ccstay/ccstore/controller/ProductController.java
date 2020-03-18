@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("products")
+@RequestMapping("/products")
 public class ProductController extends BaseController {
     @Autowired
     IProductService service;
@@ -27,14 +27,14 @@ public class ProductController extends BaseController {
         return new JsonResult<List<Product>>(SUCCESS, data);
     }
 
-    @GetMapping("new")
+    @GetMapping("/new")
     @Cache_Find
     public JsonResult<List<Product>> getNewList() {
         List<Product> data = service.getNewList();
         return new JsonResult<List<Product>>(SUCCESS, data);
     }
 
-    @GetMapping("{id}/get")
+    @GetMapping("/{id}/get")
     public JsonResult<Product> findById(@PathVariable("id") Integer id) {
         Product product = service.findById(id);
         return new JsonResult<Product>(SUCCESS, product);

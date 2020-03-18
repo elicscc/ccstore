@@ -10,18 +10,18 @@
 		<title>CC商城</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!--导入核心文件-->
-		<script src="../bootstrap3/js/holder.js"></script>
-		<link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
-		<script src="../bootstrap3/jquery-1.9.1.min.js"></script>
-		<script src="../bootstrap3/js/bootstrap.js"></script>
-		<!-- 字体图标 -->	<link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-		<link rel="stylesheet" href="../bootstrap3/font-awesome-4.7.0/css/font-awesome.css" />
-		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="../css/top.css" />
-		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
-		<link rel="stylesheet" type="text/css" href="../css/orderConfirm.css" />
-		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>
+		<script src="bootstrap3/js/holder.js"></script>
+		<link href="bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<script src="bootstrap3/jquery-1.9.1.min.js"></script>
+		<script src="bootstrap3/js/bootstrap.js"></script>
+		<!-- 字体图标 -->	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+		<link rel="stylesheet" href="bootstrap3/font-awesome-4.7.0/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="css/top.css" />
+		<link rel="stylesheet" type="text/css" href="css/footer.css" />
+		<link rel="stylesheet" type="text/css" href="css/orderConfirm.css" />
+		<script src="js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery-getUrlParam.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 
 	<body>
@@ -93,7 +93,7 @@
 		<div class="container">
 			<div class="col-md-offset-1 col-md-10">
 				<div class="col-md-4">
-					<div class="col-md-12 order-bar-active">
+					<div class="col-md-12 order-bar-undo">
 						1.确认订单信息
 						<span class="pull-right"><span class="fa fa-chevron-right"></span></span>
 					</div>
@@ -105,53 +105,29 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					<div class="col-md-12 order-bar-undo">
+					<div class="col-md-12 order-bar-active">
 						3.付款成功
 					</div>
 				</div>
 				<div class="col-md-12">
-					<form role="form" id="form-order">
+					<form role="form">
 						<div class="form-group">
 							<label for="name">
-								<p>选择收货地址：</p>
+								<p>支付结果：</p>
 							</label>
-							<select name="aid" id="address-list" class="form-control">
-								
-							</select>
-						</div>
-						<div class="panel panel-primary">
-							<div class="panel-heading">
-								<p class="panel-title">订单商品信息：</p>
+							<div ><span id="form-id">订单号：1101000301，支付金额¥5298，收款方CC商城</span></div>
+							<hr/>
+							<div class="text-center pay-res">
+								<span class="fa fa-check-square-o pay-res-icon"></span>支付成功
 							</div>
-							<div class="panel-body">
-								<table class="cart-table" width="100%">
-									<thead>
-										<tr>
-											<th width="15%"></th>
-											<th width="35%">商品</th>
-											<th width="15%">单价</th>
-											<th width="15%">数量</th>
-											<th width="20%">金额</th>
-										</tr>
-									</thead>
-									<tbody id="cart-list" class="cart-body">
-										
-									</tbody>
-								</table>
-								<div class="total-bar">
-									&nbsp;
-									<span class="pull-right">商品共
-								<span id="selectCount"></span>件 总价¥
-									<span id="selectTotal"></span>元
-									</span>
-								</div>
+							<div class="text-center">
+								CC商城不会以系统异常、订单升级为由，要求你点击任何链接进行退款操作
 							</div>
-						</div>
-						<div class="pay-bar">
-							<a href="cart.html">返回购物车</a>
-							<span class="pull-right"><input id="btn-order" type="button" value="在线支付" class="btn btn-primary btn-lg link-pay"/></span>
-						</div>
+							<div class="pay-bar">
+								<a href="orders.html">查看订单</a>
+							</div>
 					</form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -238,98 +214,15 @@
 			<div class="col-md-12 text-center bottom">
 				皖ICP备19024863号
 			</div>
-
 		</footer>
 		<!--页脚结束-->
     <script type="text/javascript">
+    var total_amount=$.getUrlParam("total_amount");
+    var out_trade_no=$.getUrlParam("out_trade_no");
     
-    
-    
-    $(function(){
-    	showAddressList();
-    	showCartList();
-    })
-    
-     function showAddressList(){
-          $("#address-list").empty();
-          $.ajax({
-              "url":"/addresses/list",
-              "type":"get",
-              "dataType":"json",
-              "success":function(json) {
-                  var data=json.data;
-                  for(var i=0;i<data.length;i++){
-                       var opt='<option value="#{aid}">#{name}&nbsp;&nbsp;&nbsp;#{tag}&nbsp;&nbsp;&nbsp;#{province}#{city}#{area}#{address}&nbsp;&nbsp;&nbsp;#{phone}</option>';
-                       opt=opt.replace("#{name}",data[i].name);
-                       opt=opt.replace("#{tag}",data[i].tag);
-                       opt=opt.replace("#{province}",data[i].provinceName);
-                       opt=opt.replace("#{city}",data[i].cityName);
-                       opt=opt.replace("#{area}",data[i].areaName);
-                       opt=opt.replace("#{address}",data[i].address);
-                       opt=opt.replace("#{phone}",data[i].phone);
-                       //replace 默认替换遇到的一个对应字符串 多个需要使用正则表达式
-                       opt=opt.replace(/#{aid}/g,data[i].aid);
-                       $("#address-list").append(opt);
-                  }
-               }
-            });
-          }
-    
-    $("#btn-order").click(function() {
-        $.ajax({
-           "url":"/orders/create",
-           "data":$("#form-order").serialize(),
-           "type":"post",
-           "dataType":"json",
-           "success":function(json) {
-             // 服务器返回状态码200时触发
-             if (json.state == 20) {
-               location.href = "payment.html";
-             } else {
-               alert(json.message);
-             }
-           }
-         });
-       });
-    
-    
-    function showCartList(){
-        $("#cart-list").empty();
-        $.ajax({
-              "url":"/carts/get_by_cids",
-              "data":location.search.substr(1),
-              "type":"get",
-              "dataType":"json",
-              "success":function(json) {
-            	  var selectCount=0;// 总数
-                  var selectTotal=0;// 总价
-                  var data=json.data;
-                  for(var i=0;i<data.length;i++){
-                	  selectCount += data[i].num;
-                      selectTotal += (data[i].num*data[i].realPrice);
-                       var tr='<tr>'+
-                           '<td><img src="https://cdn.jsdelivr.net/gh/elicscc/ccstore/src/main/resources/static#{image}/collect.png" class="img-responsive" /></td>'+
-                           '<td>#{title}<input type="hidden" name="cids" value="#{cid}"></td>'+
-                           '<td>¥<span>#{realPrice}</span></td>'+
-                           '<td>#{num}</td>'+
-                           '<td><span>#{totalPrice}</span></td> </tr>';
-                      tr=tr.replace("#{image}",data[i].image);
-                      tr=tr.replace("#{title}",data[i].title);
-                      tr=tr.replace("#{realPrice}",data[i].realPrice);
-                      tr=tr.replace("#{num}",data[i].num);
-                      tr=tr.replace("#{totalPrice}",data[i].num*data[i].realPrice);
-                      tr=tr.replace(/#{cid}/g,data[i].cid);
-                      
-                      $("#cart-list").append(tr);
-                      }
-                      // 修改页面中对应的值
-                      $("#selectCount").text(selectCount);
-                      $("#selectTotal").text(selectTotal);
-                  
-               }
-            });
-        }
-     </script>
+    $("#form-id").text('订单号：'+out_trade_no+'，支付金额¥'+total_amount+'，收款方CC商城');
+    </script>
+ 
 	</body>
 
 </html>
